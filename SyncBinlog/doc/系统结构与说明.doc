@@ -1,0 +1,8 @@
+
+
+只有在建立连接之后写入到binlog文件中的event才能被获取到
+
+Should I use retry or acks_late?
+Answer: Depends. It’s not necessarily one or the other, you may want to use both.
+Task.retry?is used to retry tasks, notably for expected errors that is catchable with thetry:?block. The AMQP transaction is not used for these errors:?if the task raises an exception it is still acknowledged!
+引用:  http://celery.readthedocs.org/en/latest/faq.html#faq-acks-late-vs-retry

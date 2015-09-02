@@ -1,5 +1,11 @@
 from __future__ import absolute_import
 
+
+
+from celery.exceptions import Reject
+from celery.exceptions import Ignore
+
+
 from binlog.celery import app
 """
 
@@ -14,17 +20,35 @@ celery worker --app=project -l info -Q verify_queue
 celery worker --app=project -l info -Q add_queue
 """
 
-@app.task
-def update_rows_event(table, id, doc):
-    print table,id,doc
+@app.task(bind=True, acks_late=True, default_retry_delay=3 * 60)
+def update_rows_event(self, table, id, doc):
+    # http://docs.celeryproject.org/en/master/userguide/tasks.html
+    ignore_flag = False
+    if ignore_flag:
+        raise Ignore()
+    
+    try:
+        print table,id,doc
+        raise Exception
+    except Exception as exc:
+        # raise self.retry(exc=exc, countdown=60)
+        raise Reject(exc, requeue=True)
 
-
-@app.task
-def delete_rows_event(table, id):
-    print table,id
-
-@app.task
-def write_rows_event(table, id, doc):
-    print table,id,doc
-
+@app.task(bind=True, acks_late=True, default_retry_delay=3 * 60)
+def delete_rows_event(self, table, id):
+    try:
+        print table,id
+        raise Exception
+    except Exception as exc:
+        #raise self.retry(exc=exc, countdown=60)
+        raise Reject(exc, requeue=True)
+    
+@app.task(bind=True, acks_late=True, default_retry_delay=3 * 60)
+def write_rows_event(self,  table, id, doc):
+    try:
+        print table,id,doc
+        raise Exception
+    except Exception as exc:
+        #raise self.retry(exc=exc, countdown=60)
+        raise Reject(exc, requeue=True)
 
