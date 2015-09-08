@@ -1,7 +1,10 @@
 eclipse.preferences.version=1
+encoding//binlog/rediskeys.py=utf-8
 encoding//binlog/syncbinlog.py=utf-8
+encoding//binlog/tables.py=utf-8
 encoding//com/SyncBinlog.py=utf-8
 encoding//com/es-py/demo1.py=utf-8
+encoding//missions/utils.py=utf-8
 encoding//tests/demo1.py=utf-8
 encoding//tests/demo2.py=utf-8
 encoding//tests/http_stream.py=utf-8
